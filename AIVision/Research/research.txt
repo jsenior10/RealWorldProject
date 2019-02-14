@@ -1,0 +1,6 @@
+https://www.pyimagesearch.com/2014/08/04/opencv-python-color-detection/
+https://docs.opencv.org/3.0-beta/modules/imgproc/doc/imgproc.html
+https://picamera.readthedocs.io/en/release-1.10/recipes1.html#capturing-to-a-pil-image
+https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_image_display/py_image_display.html
+https://pypi.org/project/opencv-python
+https://stackoverflow.com/questions/47483951/how-to-define-a-threshold-value-to-detect-only-green-colour-objects-in-an-image
