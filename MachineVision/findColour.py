@@ -1,30 +1,40 @@
-import numpy as np
 import cv2
+import numpy as np
+
 
 def findColour(filename, colour):
     """Function that takes path of an image and outputs a new file highlighting said colour."""
-    if colour == "red":
-        boundaries = [(0, 150, 50),(7, 255, 255)]  #pair of least red and most red on the hsv map 
-        wrapAround = [(170, 150, 50), (180, 255, 255)] 
-    elif colour == "green":
-        boundaries = [(36, 25, 25), (80, 255,255)]
 
-    image = cv2.imread(filename, 1) #gcolour
-    
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    
-    lower = boundaries[0]
-    upper = boundaries[1]
+    image = cv2.imread(filename, 1)  # gcolour
+    blurred_image = cv2.GaussianBlur(image, (5, 5), 0)  # blurred to remove noise
+    hsv = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv, lower, upper)
-    
+    red_lower = np.array([0, 150, 0])  # pair of least red and most red on the hsv map
+    red_upper = np.array([7, 255, 359])
+    wrap_around_lower = np.array([170, 150, 0])  # still need tweaking, doesnt pick up very light reds
+    wrap_around_upper = np.array([180, 255, 359])
+
+    mask = cv2.inRange(hsv, red_lower, red_upper)
     if colour == "red":
-        additionalMask = cv2.inRange(hsv, wrapAround[0], wrapAround[1])
-        mask += additionalMask  #since they're nothing but arrays, we can simply add them together 
-        
-    output = cv2.bitwise_and(image, image, mask = mask) #highlights our mask onto the original image 
- 
-    cv2.imwrite('output.jpg', output)
-    
+        additional_mask = cv2.inRange(hsv, wrap_around_lower, wrap_around_upper)
+        mask += additional_mask
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                       cv2.CHAIN_APPROX_NONE)  # finds the edges between white and black for the mask
+        contoured = cv2.drawContours(image, contours, -1, (255, 0, 0), 3)  # draws the edges
+        cv2.imwrite('output1.jpg', contoured)
+
+    output = cv2.bitwise_and(image, image, mask=mask)  # highlights our mask onto the original image
+
+    cv2.imwrite('output2.jpg', output)
+
+    for contour in contours:
+        area = cv2.contourArea(
+            contour)  # returns the area of contour (i dont know what unit it returns it as (possibly pixels?))
+
+        if area > 5000:  # draw the edges in green if the area is > 5000
+            cnt_area = cv2.drawContours(image, contour, -1, (0, 255, 0), 3)
+            cv2.imwrite('cntArea.jpg', cnt_area)
+
+
 if __name__ == "__main__":
-    findColour("/home/codio/workspace/WheelieVehicle/Assets/hsvMap.jpg", "red")
+    findColour("MachineVision/Assets/hsvMap.jpg", "red")
