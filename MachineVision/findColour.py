@@ -16,7 +16,7 @@ def findColour(filename, colour):
     wrap_around_upper = np.array([180, 255, 359])
 
     # GREEN COLOUR BOUNDARIES
-    green_lower = np.array([60, 90, 60])
+    green_lower = np.array([40, 60, 60])
     green_upper = np.array([80, 359, 359])
 
     if colour == "red":
@@ -49,4 +49,4 @@ def findColour(filename, colour):
 
 
 if __name__ == "__main__":
-    findColour("./Assets/test3.jpg", "red")
+    findColour("./Assets/test2.jpg", "green")
