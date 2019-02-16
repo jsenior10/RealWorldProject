@@ -21,11 +21,11 @@ def findColour(filename, colour):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                        cv2.CHAIN_APPROX_NONE)  # finds the edges between white and black for the mask
         contoured = cv2.drawContours(image, contours, -1, (255, 0, 0), 3)  # draws the edges
-        cv2.imwrite('output1.jpg', contoured)
+        cv2.imwrite('./Output/output1.jpg', contoured)
 
     output = cv2.bitwise_and(image, image, mask=mask)  # highlights our mask onto the original image
 
-    cv2.imwrite('output2.jpg', output)
+    cv2.imwrite('./Output/output2.jpg', output)
 
     for contour in contours:
         area = cv2.contourArea(
@@ -33,8 +33,8 @@ def findColour(filename, colour):
 
         if area > 5000:  # draw the edges in green if the area is > 5000
             cnt_area = cv2.drawContours(image, contour, -1, (0, 255, 0), 3)
-            cv2.imwrite('cntArea.jpg', cnt_area)
+            cv2.imwrite('./Output/cntArea.jpg', cnt_area)
 
 
 if __name__ == "__main__":
-    findColour("/home/codio/workspace/WheelieVehicle/Assets/hsvMap.jpg", "red")
+    findColour("./Assets/test2.jpg", "red")
