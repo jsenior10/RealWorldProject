@@ -9,18 +9,30 @@ def findColour(filename, colour):
     blurred_image = cv2.GaussianBlur(image, (5, 5), 0)  # blurred to remove noise
     hsv = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
 
+    # RED COLOUR BOUNDARIES
     red_lower = np.array([0, 150, 0])  # pair of least red and most red on the hsv map
     red_upper = np.array([7, 255, 359])
     wrap_around_lower = np.array([170, 150, 0])  # still need tweaking, doesnt pick up very light reds
     wrap_around_upper = np.array([180, 255, 359])
 
-    mask = cv2.inRange(hsv, red_lower, red_upper)
+    # GREEN COLOUR BOUNDARIES
+    green_lower = np.array([60, 90, 60])
+    green_upper = np.array([80, 359, 359])
+
     if colour == "red":
+        mask = cv2.inRange(hsv, red_lower, red_upper)
         additional_mask = cv2.inRange(hsv, wrap_around_lower, wrap_around_upper)
         mask += additional_mask
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                        cv2.CHAIN_APPROX_NONE)  # finds the edges between white and black for the mask
         contoured = cv2.drawContours(image, contours, -1, (255, 0, 0), 3)  # draws the edges
+        cv2.imwrite('./Output/' + colour + '1.jpg', contoured)
+
+    if colour == "green":
+        mask = cv2.inRange(hsv, green_lower, green_upper)
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                       cv2.CHAIN_APPROX_NONE)
+        contoured = cv2.drawContours(image, contours, -1, (255, 0, 0), 3)
         cv2.imwrite('./Output/' + colour + '1.jpg', contoured)
 
     output = cv2.bitwise_and(image, image, mask=mask)  # highlights our mask onto the original image
@@ -37,4 +49,4 @@ def findColour(filename, colour):
 
 
 if __name__ == "__main__":
-    findColour("./Assets/test2.jpg", "red")
+    findColour("./Assets/test3.jpg", "red")
