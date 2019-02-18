@@ -15,7 +15,7 @@ def findColour(filename, colour) -> object:
     # RED COLOUR BOUNDARIES
     red_lower = np.array([0, 150, 0])  # pair of least red and most red on the hsv map
     red_upper = np.array([7, 255, 359])
-    wrap_around_lower = np.array([170, 150, 0])    # still need tweaking, doesnt pick up very light reds
+    wrap_around_lower = np.array([170, 150, 0])  # still need tweaking, doesnt pick up very light reds
     wrap_around_upper = np.array([180, 255, 359])  # Could draw box around item to remedy this?
 
     # GREEN COLOUR BOUNDARIES

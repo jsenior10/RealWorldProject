@@ -22,6 +22,14 @@ while True:
         if area > 500:
             cv2.drawContours(frame, contour, -1, (0,255,0), 3)
 
+    if len(contours) != 0:  # check if there's anything in contours
+        cv2.drawContours(frame, contours, -1, 255, 3)  # draws contours in blue
+
+        c = max(contours, key=cv2.contourArea)  # finds contour with largest area
+
+        x, y, w, h = cv2.boundingRect(c)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw rectangle around largest cone
+
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
 
