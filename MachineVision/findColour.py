@@ -2,10 +2,10 @@ import cv2
 import numpy as np
 
 
-def findColour(openCVobject, colour) -> object:
+def findColour(openCVobject, output = False) -> object:
     """Function that takes path of an image and outputs a new file highlighting said colour.
-    :param filename: name of image you want to process
-    :param colour: the colour you want to extract (green/red)
+    :param openCVobject: variable pointing to an openCVobject 
+    :param output: whether you want it saved to the file system as well or not 
     """
 
     image = openCVobject  # gcolour
@@ -21,26 +21,34 @@ def findColour(openCVobject, colour) -> object:
     # GREEN COLOUR BOUNDARIES
     green_lower = np.array([40, 60, 60])
     green_upper = np.array([80, 359, 359])
+    
+    #red detection
+    maskRed = cv2.inRange(hsv, red_lower, red_upper)
+    additional_mask = cv2.inRange(hsv, wrap_around_lower, wrap_around_upper)
+    maskRed += additional_mask
 
-    if colour == "red":
-        mask = cv2.inRange(hsv, red_lower, red_upper)
-        additional_mask = cv2.inRange(hsv, wrap_around_lower, wrap_around_upper)
-        mask += additional_mask
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,  # finds the edges between white and black for the mask
+    #green detection 
+    maskGreen = cv2.inRange(hsv, green_lower, green_upper)
+
+    if output:
+        contoursRed, _ = cv2.findContours(maskRed, cv2.RETR_EXTERNAL,  # finds the edges between white and black for the mask
                                        cv2.CHAIN_APPROX_SIMPLE)  # contours returns an array with every edge AFAIK
-        contoured = cv2.drawContours(image, contours, -1, (255, 0, 0), 3)  # draws the edges
-        cv2.imwrite('./Output/' + colour + '1.jpg', contoured)
-
-    if colour == "green":
-        mask = cv2.inRange(hsv, green_lower, green_upper)
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+        contouredRed = cv2.drawContours(image, contoursRed, -1, (255, 0, 0), 3)  # draws the edges
+        cv2.imwrite('./Output/red1.jpg', contouredRed)
+        
+        contoursGreen, _ = cv2.findContours(maskGreen, cv2.RETR_EXTERNAL,
                                        cv2.CHAIN_APPROX_SIMPLE)
-        contoured = cv2.drawContours(image, contours, -1, (255, 0, 0), 3)
-        cv2.imwrite('./Output/' + colour + '1.jpg', contoured)
-
-    output = cv2.bitwise_and(image, image, mask=mask)  # highlights our mask onto the original image
-    cv2.imwrite('./Output/' + colour + '2.jpg', output)
-
+        contouredGreen = cv2.drawContours(image, contoursGreen, -1, (255, 0, 0), 3)
+        cv2.imwrite('./Output/green1.jpg', contouredGreen)
+        
+        outputImage1 = cv2.bitwise_and(image, image, mask=maskRed)  # highlights our mask onto the original image
+        cv2.imwrite('./Output/red2.jpg', outputImage1)
+        
+        outputImage2 = cv2.bitwise_and(image, image, mask=maskGreen)  # highlights our mask onto the original image
+        cv2.imwrite('./Output/green2.jpg', outputImage2)
+    
+    return maskRed, maskGreen 
+"""
     if len(contours) != 0:  # check if there's anything in contours
         cv2.drawContours(output, contours, -1, 255, 3)  # draws contours in blue
 
@@ -57,7 +65,7 @@ def findColour(openCVobject, colour) -> object:
         if area > 5000:  # draw the edges in green if the area is > 5000
             cnt_area = cv2.drawContours(image, contour, -1, (0, 255, 0), 3)
             cv2.imwrite('./Output/' + colour + 'cntArea.jpg', cnt_area)
-
+"""
 
 if __name__ == "__main__":
     
