@@ -16,11 +16,12 @@ while True:
 	# Construct a numpy array from the stream
 	data = np.fromstring(stream.getvalue(), dtype=np.uint8)
 	# "Decode" the image from the array, preserving colour
-	image = cv2.imdecode(data, 1)
+	#image = cv2.imdecode(data, 1)
 	# OpenCV returns an array with data in BGR order. If you want RGB instead
 	# use the following...
 	
 	for colour in ["red", "green"]:
+		image = cv2.imdecode(data, 1)
 		findColour(image, colour)
 	
 	input("Press enter for next frame.")
