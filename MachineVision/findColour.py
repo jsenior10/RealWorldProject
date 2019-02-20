@@ -2,13 +2,13 @@ import cv2
 import numpy as np
 
 
-def findColour(filename, colour) -> object:
+def findColour(openCVobject, colour) -> object:
     """Function that takes path of an image and outputs a new file highlighting said colour.
     :param filename: name of image you want to process
     :param colour: the colour you want to extract (green/red)
     """
 
-    image = cv2.imread(filename, 1)  # gcolour
+    image = openCVobject  # gcolour
     blurred_image = cv2.GaussianBlur(image, (5, 5), 0)  # blurred to remove noise
     hsv = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
 
@@ -60,4 +60,7 @@ def findColour(filename, colour) -> object:
 
 
 if __name__ == "__main__":
-    findColour("./Assets/test3.jpg", "red")
+    
+    image = cv2.imread("./Assets/test3.jpg", 1)
+    
+    findColour(image, "red")
