@@ -20,9 +20,8 @@ while True:
 	# OpenCV returns an array with data in BGR order. If you want RGB instead
 	# use the following...
 	
-	for colour in ["red", "green"]:
-		image = cv2.imdecode(data, 1)
-		findColour(image, colour)
+    image = cv2.imdecode(data, 1)
+	findColour(image, True)
 	
 	input("Press enter for next frame.")
 
