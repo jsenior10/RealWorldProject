@@ -18,9 +18,9 @@ def findColour(openCVobject, output = False) -> object:
     wrap_around_lower = np.array([170, 150, 60])  # still need tweaking, doesnt pick up very light reds
     wrap_around_upper = np.array([180, 255, 359])  # Could draw box around item to remedy this?
 
-    # GREEN COLOUR BOUNDARIES
-    green_lower = np.array([40, 60, 60])
-    green_upper = np.array([80, 359, 359])
+    # YELLOW COLOUR BOUNDARIES
+    yellow_lower = np.array([40, 60, 60])
+    yellow_upper = np.array([80, 359, 359])
     
     #red detection
     maskRed = cv2.inRange(hsv, red_lower, red_upper)
@@ -28,15 +28,15 @@ def findColour(openCVobject, output = False) -> object:
     maskRed += additional_mask
 
     #green detection 
-    maskGreen = cv2.inRange(hsv, green_lower, green_upper)
+    maskGreen = cv2.inRange(hsv, yellow_lower, yellow_upper)
 
     if output:
-        _, contoursRed, _ = cv2.findContours(maskRed, cv2.RETR_EXTERNAL,  # finds the edges between white and black for the mask
+        contoursRed, _ = cv2.findContours(maskRed, cv2.RETR_EXTERNAL,  # finds the edges between white and black for the mask
                                        cv2.CHAIN_APPROX_SIMPLE)  # contours returns an array with every edge AFAIK
         contouredRed = cv2.drawContours(image, contoursRed, -1, (255, 0, 0), 3)  # draws the edges
         cv2.imwrite('./Output/red1.jpg', contouredRed)
         
-        _, contoursGreen, _ = cv2.findContours(maskGreen, cv2.RETR_EXTERNAL,
+        contoursGreen, _ = cv2.findContours(maskGreen, cv2.RETR_EXTERNAL,
                                        cv2.CHAIN_APPROX_SIMPLE)
         contouredGreen = cv2.drawContours(image, contoursGreen, -1, (255, 0, 0), 3)
         cv2.imwrite('./Output/green1.jpg', contouredGreen)
