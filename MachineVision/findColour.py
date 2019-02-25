@@ -31,12 +31,12 @@ def findColour(openCVobject, output = False) -> object:
     maskGreen = cv2.inRange(hsv, green_lower, green_upper)
 
     if output:
-        contoursRed, _ = cv2.findContours(maskRed, cv2.RETR_EXTERNAL,  # finds the edges between white and black for the mask
+        _, contoursRed, _ = cv2.findContours(maskRed, cv2.RETR_EXTERNAL,  # finds the edges between white and black for the mask
                                        cv2.CHAIN_APPROX_SIMPLE)  # contours returns an array with every edge AFAIK
         contouredRed = cv2.drawContours(image, contoursRed, -1, (255, 0, 0), 3)  # draws the edges
         cv2.imwrite('./Output/red1.jpg', contouredRed)
         
-        contoursGreen, _ = cv2.findContours(maskGreen, cv2.RETR_EXTERNAL,
+        _, contoursGreen, _ = cv2.findContours(maskGreen, cv2.RETR_EXTERNAL,
                                        cv2.CHAIN_APPROX_SIMPLE)
         contouredGreen = cv2.drawContours(image, contoursGreen, -1, (255, 0, 0), 3)
         cv2.imwrite('./Output/green1.jpg', contouredGreen)
