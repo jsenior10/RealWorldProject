@@ -46,18 +46,18 @@ def findColour(openCVobject, output = False) -> object:
         
         outputImage2 = cv2.bitwise_and(image, image, mask=maskGreen)  # highlights our mask onto the original image
         cv2.imwrite('./Output/green2.jpg', outputImage2)
+        
+    if len(contoursRed) != 0:  # check if there's anything in contours
+        cv2.drawContours(outputImage1, contoursRed, -1, 255, 3)  # draws contours in blue
+
+        c = max(contoursRed, key=cv2.contourArea)  # finds contour with largest area
+
+        x, y, w, h = cv2.boundingRect(c)
+        cv2.rectangle(outputImage1, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw rectangle around largest cone
+        cv2.imwrite('./Output/LargestArea.jpg', outputImage1)
     
     return maskRed, maskGreen 
 """
-    if len(contours) != 0:  # check if there's anything in contours
-        cv2.drawContours(output, contours, -1, 255, 3)  # draws contours in blue
-
-        c = max(contours, key=cv2.contourArea)  # finds contour with largest area
-
-        x, y, w, h = cv2.boundingRect(c)
-        cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw rectangle around largest cone
-        cv2.imwrite('./Output/' + colour + 'LargestArea.jpg', output)
-
     for contour in contours:
         area = cv2.contourArea(
             contour)  # returns the area of contour (i dont know what unit it returns it as (possibly pixels?))
