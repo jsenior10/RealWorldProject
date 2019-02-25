@@ -1,3 +1,0 @@
-import ftplib
-
-ftpConnection = ftplib.FTP("[FTP SERVER]", "[FTP SERVER USERNAME]", "[FTP SERVER PASSWORD]") #establishes the connection to the server via FTP with the details provided
