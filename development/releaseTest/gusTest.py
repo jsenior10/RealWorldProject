@@ -7,22 +7,26 @@ GPIO.setup(18, GPIO.OUT)
 servo = GPIO.PWM(16, 50)
 motor = GPIO.PWM(18, 50)
 
-print("\nLeft or right?(l/r): ")
-print("Motor range: 7.00 - 9.00, Vslow - Vfast\n")
 
-try:
+def changeServo(direction):
+	if direction == "l":
+		servo.start(15)
+	if direction == "r":
+		servo.start(1)
+	if direction == "s":
+		servo.start(8)
+
+
+def changeSpeed(speed):
+	motor.start(float(speed))
+
+
+def main():
 	while True:
-		servoInput = input("Servo: ")
-		motorInput = input("motor: ")
-
-		if servoInput == "l":
-			servo.start(15)
-		if servoInput == "r":
-			servo.start(1)
-		else:
-			print("Invalid servo input")
-
-		motor.start(float(motorInput))
-
-finally:
+		direction = input("\nplease enter l, s or r: ")
+		speed = input("please enter speed 7.00-9.00: ")
+		changeServo(direction)
+		changeSpeed(speed)
 	GPIO.cleanup()
+
+main()
