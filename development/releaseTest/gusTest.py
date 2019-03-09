@@ -8,6 +8,7 @@ GPIO.setup(18, GPIO.OUT)
 servo = GPIO.PWM(16, 50)
 motor = GPIO.PWM(18, 50)
 t = time.sleep
+mstop = motor.stop()
 
 def servoAllign():
 	servo.start(15)
@@ -25,10 +26,29 @@ def changeServo(direction):
 	if direction == "m":
 		servo.start(6.85)
 
-
 def changeSpeed(speed):
 	motor.start(float(speed))
 
+def slowForward():
+	changeSpeed(7.80)
+	t(1)
+	mstop
+
+def slowLeft():
+	changeSpeed(7.80)
+	changeServo("l")
+	t(0.5)
+	changeServo("m")
+	t(0.5)
+	changeServo("l")
+	t(0.5)
+	changeServo("m")
+	t(0.5)
+	changeServo("l")
+	t(0.5)
+	changeServo("m")
+	t(0.2)
+	mstop
 
 def slowRight():
 	changeSpeed(7.80)
@@ -44,10 +64,20 @@ def slowRight():
 	t(0.5)
 	changeServo("m")
 	t(0.2)
+	mstop
+
+def circle():		#perform clockwise (right) circle
+	changeSpeed(7.75)
+	changeServo("r")
+	t(2)
+	mstop
 
 def main():
 	servoAllign()
-	slowRight()
+	slowLeft()
+	#slowRight()
+	#slowForward()
+	#circle()
 	GPIO.cleanup()
 
 main()
