@@ -18,17 +18,17 @@ def findColour(openCVobject, output = False) -> object:
     wrap_around_lower = np.array([170, 150, 60])  # still need tweaking, doesnt pick up very light reds
     wrap_around_upper = np.array([180, 255, 359])  # Could draw box around item to remedy this?
 
-    # GREEN COLOUR BOUNDARIES
-    green_lower = np.array([40, 60, 60])
-    green_upper = np.array([80, 359, 359])
+    # YELLOW COLOUR BOUNDARIES
+    yellow_lower = np.array([20, 100, 100])
+    yellow_upper = np.array([30, 255, 255])
     
     #red detection
     maskRed = cv2.inRange(hsv, red_lower, red_upper)
     additional_mask = cv2.inRange(hsv, wrap_around_lower, wrap_around_upper)
     maskRed += additional_mask
 
-    #green detection 
-    maskGreen = cv2.inRange(hsv, green_lower, green_upper)
+    #yellow detection 
+    maskYellow = cv2.inRange(hsv, yellow_lower, yellow_upper)
 
     if output:
         _, contoursRed, _ = cv2.findContours(maskRed, cv2.RETR_EXTERNAL,  # finds the edges between white and black for the mask
@@ -36,27 +36,32 @@ def findColour(openCVobject, output = False) -> object:
         contouredRed = cv2.drawContours(image, contoursRed, -1, (255, 0, 0), 3)  # draws the edges
         cv2.imwrite('./Output/red1.jpg', contouredRed)
         
-        _, contoursGreen, _ = cv2.findContours(maskGreen, cv2.RETR_EXTERNAL,
+        _, contoursYellow, _ = cv2.findContours(maskYellow, cv2.RETR_EXTERNAL,
                                        cv2.CHAIN_APPROX_SIMPLE)
-        contouredGreen = cv2.drawContours(image, contoursGreen, -1, (255, 0, 0), 3)
-        cv2.imwrite('./Output/green1.jpg', contouredGreen)
+        contouredYellow = cv2.drawContours(image, contoursYellow, -1, (255, 0, 0), 3)
+        cv2.imwrite('./Output/yellow1.jpg', contouredYellow)
         
         outputImage1 = cv2.bitwise_and(image, image, mask=maskRed)  # highlights our mask onto the original image
         cv2.imwrite('./Output/red2.jpg', outputImage1)
         
-        outputImage2 = cv2.bitwise_and(image, image, mask=maskGreen)  # highlights our mask onto the original image
-        cv2.imwrite('./Output/green2.jpg', outputImage2)
+        outputImage2 = cv2.bitwise_and(image, image, mask=maskYellow)  # highlights our mask onto the original image
+        cv2.imwrite('./Output/yellow2.jpg', outputImage2)
         
-    if len(contoursRed) != 0:  # check if there's anything in contours
+    if (len(contoursRed) != 0 and len(contoursYellow) != 0):  # check if there's anything in contours
         cv2.drawContours(image, contoursRed, -1, 255, 3)  # draws contours in blue
-
-        c = max(contoursRed, key=cv2.contourArea)  # finds contour with largest area
-
-        x, y, w, h = cv2.boundingRect(c)
+        cv2.drawContours(image, contoursYellow, -1, 255, 3)
+        redMax = max(contoursRed, key=cv2.contourArea)  # finds contour with largest area
+        yellowMax = max(contoursYellow, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(redMax)
+        x1, y1, w1, h1 = cv2.boundingRect(yellowMax)
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)  # draw rectangle around largest cone
+        cv2.rectangle(image, (x1, y1), (x1 + w1, y1 + h1), (0, 255, 0), 2)
+        redCirc = cv2.circle(image,(x+w//2, y+h//2), 25, (0,255,0), -1)
+        yellowCirc = cv2.circle(image,(x1+w1//2, y1+h1//2), 25, (0,255,0), -1)
+        cv2.line(image, (x+w//2, y+h//2), (x1+w1//2, y1+h1//2), (255,0,0), 5)
         cv2.imwrite('./Output/LargestArea.jpg', image)
     
-    return maskRed, maskGreen 
+    return maskRed, maskYellow 
 """
     for contour in contours:
         area = cv2.contourArea(
@@ -71,4 +76,4 @@ if __name__ == "__main__":
     
     image = cv2.imread("./Assets/test3.jpg", 1)
     
-    findColour(image, "red")
+    findColour(image, True)
