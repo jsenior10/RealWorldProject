@@ -85,7 +85,8 @@ try:
 		#if maskRed == None:
 			#print("Didn't find red.")
 			#continue
-		exitProgram = False
+		foundRed = False 
+		foundYellow = False 
 		start = time.time()
 		#print("Lenght of maskRed, ", len(maskRed) )
 		#input()
@@ -98,7 +99,7 @@ try:
 				#print(pixel, end=" ")
 				if maskRed[i][k] == 255:
 					if count == 0:
-						position = k
+						positionRed = k
 					#if redPositions[i][0] == None:
 					#	redPositions[i][0] = k
 					#redPositions[i][1] = k
@@ -106,19 +107,44 @@ try:
 					count += 1
 				#print("Current count: ", count)
 			if count > 25:
-				print(redPositions)
+				#print(redPositions)
 				#keys = list(redPositions.keys())
-				size = lastRed - position #redPositions[max(keys)][1] - redPositions[min(keys)][0]
+				sizeRed = lastRed - positionRed #redPositions[max(keys)][1] - redPositions[min(keys)][0]
 				#position = #redPositions[min(keys)][0]
-				print("Size(px): ", size)
-				print("At position: ", position)
+				print("Size(px): ", sizeRed)
+				print("At position: ", positionRed)
 				print("Current red pixel count: ", count)
-				exitProgram = True
+				foundRed = True
 				break
-		if exitProgram:
+		count = 0 		
+		for i in range(int(len(maskYellow)*0.892), int(len(maskYellow)*0.9)):
+			#print("Counting pixels ", len(maskRed[i]))
+			#redPositions[i] = [None, None] 
+			for k in range(int(len(maskYellow[i])/2), len(maskYellow[i]),-1): #for performance reasons
+				#print(pixel, end=" ")
+				if maskYellow[i][k] == 255:
+					if count == 0:
+						positionYellow = k
+					#if redPositions[i][0] == None:
+					#	redPositions[i][0] = k
+					#redPositions[i][1] = k
+					lastYellow = k
+					count += 1
+				#print("Current count: ", count)
+			if count > 25:
+				#print(redPositions)
+				#keys = list(redPositions.keys())
+				sizeYellow = lastYellow - positionYellow #redPositions[max(keys)][1] - redPositions[min(keys)][0]
+				#position = #redPositions[min(keys)][0]
+				print("Size(px): ", sizeYellow)
+				print("At position: ", positionYellow)
+				print("Current red pixel count: ", count)
+				foundYellow = True
+				break
+		if foundRed and foundYellow:
 			break
 		end = time.time()
-		print("Didn't find red. Next frame")
+		#print("Didn't find both. Next frame")
 		print("Processing time: ", end - start)
 
 except(KeyboardInterrupt):
