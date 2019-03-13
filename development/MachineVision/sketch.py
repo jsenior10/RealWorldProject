@@ -75,7 +75,7 @@ try:
 		#camera.capture('./Output/cam.jpg', format='jpeg')
 		end = time.time()
 		#print("We have taken a picture")
-		print("Amount of time to take picture ", end - start)
+		#print("Amount of time to take picture ", end - start)
 		data = np.fromstring(stream.getvalue(), dtype=np.uint8)
 
 		image = cv2.imdecode(data,1)
@@ -90,7 +90,7 @@ try:
 		start = time.time()
 		#print("Lenght of maskRed, ", len(maskRed) )
 		#input()
-		print(int(len(maskRed)*0.87), int(len(maskRed)*0.9))
+		#print(int(len(maskRed)*0.87), int(len(maskRed)*0.9))
 		redPositions = {}
 		for i in range(int(len(maskRed)*0.892), int(len(maskRed)*0.9)):
 			#print("Counting pixels ", len(maskRed[i]))
@@ -110,18 +110,20 @@ try:
 				#print(redPositions)
 				#keys = list(redPositions.keys())
 				sizeRed = lastRed - positionRed #redPositions[max(keys)][1] - redPositions[min(keys)][0]
-				#position = #redPositions[min(keys)][0]
-				print("Size(px): ", sizeRed)
-				print("At position: ", positionRed)
-				print("Current red pixel count: ", count)
+				#position = #rdPositions[min(keys)][0]
+				#print("Red size(px): ", sizeRed)
+				print("Red at position: ", positionRed)
+				#print("Red pixel count: ", count)
 				foundRed = True
 				break
-		count = 0 		
+		count = 0
+		#print(maskYellow)
+		#input("")
 		for i in range(int(len(maskYellow)*0.892), int(len(maskYellow)*0.9)):
-			#print("Counting pixels ", len(maskRed[i]))
+			#print("\nCounting yellow pixels ", len(maskRed[i]))
 			#redPositions[i] = [None, None] 
-			for k in range(int(len(maskYellow[i])/2), len(maskYellow[i]),-1): #for performance reasons
-				#print(pixel, end=" ")
+			for k in range(int(len(maskYellow[i])/2), len(maskYellow[i])): #for performance reasons
+				#print(maskYellow[i][k], end=" ")
 				if maskYellow[i][k] == 255:
 					if count == 0:
 						positionYellow = k
@@ -136,16 +138,18 @@ try:
 				#keys = list(redPositions.keys())
 				sizeYellow = lastYellow - positionYellow #redPositions[max(keys)][1] - redPositions[min(keys)][0]
 				#position = #redPositions[min(keys)][0]
-				print("Size(px): ", sizeYellow)
-				print("At position: ", positionYellow)
-				print("Current red pixel count: ", count)
+				#print("Yellow size(px): ", sizeYellow)
+				print("Yellow at position: ", positionYellow)
+				#print("Yellow pixel count: ", count)
 				foundYellow = True
 				break
 		if foundRed and foundYellow:
-			break
+			print("\n\nWe are this close(px): ", 480-positionYellow-positionRed)
+			if (positionRed == 480 - positionYellow):
+				break
 		end = time.time()
 		#print("Didn't find both. Next frame")
-		print("Processing time: ", end - start)
+		#print("Processing time: ", end - start)
 
 except(KeyboardInterrupt):
   GPIO.cleanup()
