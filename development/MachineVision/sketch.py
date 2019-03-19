@@ -39,29 +39,24 @@ try:
         foundYellow = False
        # print( int(len(maskRed)*0.088)  , int( len( maskRed ) * 0.1) )
 
-        positionYellow = 500
-        positionRed = -100
-
         for i in range(int(len(maskRed) * 0.892), int(len(maskRed) * 0.9)):
             for k in range(0, int(len(maskRed[i]) / 2)):  # looks at the left pixels
                 if redCount > 25:
                     print("Red at position: ", positionRed)
-                    # print("Red pixel count: ", count)
                     foundRed = True
                     break
-                if (not foundRed) and maskRed[i][k]:  # faster than == 255
+                if maskRed[i][k]:  # faster than == 255
                     if (not redCount):  # when count is 0
                         positionRed = k
                     redCount += 1
 
-            for k in reversed(range(int(len(maskYellow[i]) / 2), 401)):  # right of image
+            for k in reversed(range(int(len(maskYellow[i]) / 2), len(maskYellow[i]))):  # right of image
                 # reversed looks at the pixels right to left
                 if yellowCount > 25:
                     print("Yellow at position: ", positionYellow)
-                    # print("Yellow pixel count: ", count)
                     foundYellow = True
                     break
-                if (not foundYellow) and maskYellow[i][k]:  # faster than == 255
+                if maskYellow[i][k]:  # faster than == 255
                     if (not yellowCount):  # when count == 0
                         positionYellow = k
                     yellowCount += 1
