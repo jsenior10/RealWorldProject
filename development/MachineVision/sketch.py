@@ -3,6 +3,7 @@ import time
 import pigpio
 from findColour import findColour
 from picamera import PiCamera
+from picamera.array import PiRGBArray
 import numpy as np
 import cv2
 
@@ -25,11 +26,15 @@ try:
     while True:
         start = time.time()
        
-        stream = io.BytesIO()
-        camera.capture(stream, format='jpeg', use_video_port=True)
-        data = np.fromstring(stream.getvalue(), dtype=np.uint8)
-        image = cv2.imdecode(data, 1)
-                
+        #stream = io.BytesIO()
+        #camera.capture(stream, format='jpeg', use_video_port=True)
+        #data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+        #image = cv2.imdecode(data, 1)
+        
+        with picamera.array.PiRGBArray(camera) as stream:
+            camera.capture(stream, format='bgr')
+            image = stream.array 
+            
         end = time.time()   
         print("Amount of time to take picture ", end - start)
         
