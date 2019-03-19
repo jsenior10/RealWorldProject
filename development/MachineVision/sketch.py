@@ -19,7 +19,7 @@ camera = PiCamera()
 camera.resolution = (480, 240)
 camera.start_preview()
 
-lastCommand = 0
+lastCommand = 1500 #starts middle 
 
 try:
     while True:
@@ -41,31 +41,32 @@ try:
         foundYellow = False
 
         for i in range(int(len(maskRed) * 0.892), int(len(maskRed) * 0.9)):
-            
+            #iterates vertically over slices 
             for k in range(0, int(len(maskRed[i]) / 2)):  # looks at the left pixels
-                if redCount > 25:
-                    print("Red at position: ", positionRed)
-                    foundRed = True
-                    break
+               #pixel by pixel horizontally
                 if maskRed[i][k]:  # faster than == 255
                     if (not redCount):  # when count is 0
-                        positionRed = k
-                    redCount += 1
-                    
+                        positionRed = k                     
+                    redCount += 1       
+                    if redCount > 25:
+                        print("Red at position: ", positionRed)
+                        foundRed = True
+                        break
+                        
             for k in reversed(range(int(len(maskYellow[i]) / 2), 401)):  # right of image
-                                     #401 because last 80 pixels are not centered properly
-                if yellowCount > 25:
-                    print("Yellow at position: ", positionYellow)
-                    foundYellow = True
-                    break
+               #pixel by pixel     #401 because last 80 pixels are not centered properly
                 if maskYellow[i][k]:  # faster than == 255
                     if (not yellowCount):  # when count == 0
                         positionYellow = k
                     yellowCount += 1
+                    if yellowCount > 25:
+                        print("Yellow at position: ", positionYellow)
+                        foundYellow = True
+                        break
         
         if not foundRed:
-            positionRed = -50
-        if not foundYellow:
+            positionRed = -50 
+        if not foundYellow:  #softer turn if cone not in field of view
             poisitionYellow = 450
 
         if foundRed or foundYellow: #functionally the same, more readable
@@ -104,7 +105,7 @@ try:
 except KeyboardInterrupt:
     if lastCommand < 1450: 
        steering(1550)
-    elif lastCommand > 1550:
+    elif lastCommand > 1550: #Resets to middle 
        steering(1450)
     else:
        steering(1500)
