@@ -23,14 +23,16 @@ lastCommand = 0
 
 try:
     while True:
-        stream = io.BytesIO()
         start = time.time()
+       
+        stream = io.BytesIO()
         camera.capture(stream, format='jpeg', use_video_port=True)
-        end = time.time()
-        print("Amount of time to take picture ", end - start)
         data = np.fromstring(stream.getvalue(), dtype=np.uint8)
-
         image = cv2.imdecode(data, 1)
+                
+        end = time.time()   
+        print("Amount of time to take picture ", end - start)
+        
         maskRed, maskYellow = findColour(image, False)
 
         redCount = 0
@@ -39,6 +41,7 @@ try:
         foundYellow = False
 
         for i in range(int(len(maskRed) * 0.892), int(len(maskRed) * 0.9)):
+            
             for k in range(0, int(len(maskRed[i]) / 2)):  # looks at the left pixels
                 if redCount > 25:
                     print("Red at position: ", positionRed)
@@ -48,9 +51,9 @@ try:
                     if (not redCount):  # when count is 0
                         positionRed = k
                     redCount += 1
-
-            for k in reversed(range(int(len(maskYellow[i]) / 2), len(maskYellow[i]))):  # right of image
-                # reversed looks at the pixels right to left
+                    
+            for k in reversed(range(int(len(maskYellow[i]) / 2), 401)):  # right of image
+                                     #401 because last 80 pixels are not centered properly
                 if yellowCount > 25:
                     print("Yellow at position: ", positionYellow)
                     foundYellow = True
@@ -61,9 +64,9 @@ try:
                     yellowCount += 1
         
         if not foundRed:
-            positionRed = -100
+            positionRed = -50
         if not foundYellow:
-            poisitionYellow = 500
+            poisitionYellow = 450
 
         if foundRed or foundYellow: #functionally the same, more readable
             direction = 400 - positionYellow - positionRed
@@ -90,11 +93,14 @@ try:
             steering(1450 + direction) 
             lastCommand = 1450 + direction
             direction = 0
+            
         else:
             print("Lost track of cones. Next frame.")
+            
         end = time.time()
         print("Total time spent on frame: ", end - start)
         #input()
+        
 except KeyboardInterrupt:
     if lastCommand < 1450: 
        steering(1550)
