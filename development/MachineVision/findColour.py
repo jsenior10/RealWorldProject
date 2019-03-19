@@ -47,6 +47,8 @@ def findColour(openCVobject, output=False) -> object:
 
         # outputImage2 = cv2.bitwise_and(image, image, mask=maskYellow)  # highlights our mask onto the original image
         # cv2.imwrite('./Output/yellow2.jpg', outputImage2)
+        #maskRed = max(contoursRed, key=cv2.contourArea)
+        #maskYellow = max(contoursYellow, key=cv2.contourArea)
     return maskRed, maskYellow
 """
     if len(contoursRed) != 0 and len(contoursYellow) != 0:  # check if there's anything in contours
