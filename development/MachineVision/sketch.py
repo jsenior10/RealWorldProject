@@ -37,7 +37,6 @@ try:
         yellowCount = 0
         foundRed = False
         foundYellow = False
-       # print( int(len(maskRed)*0.088)  , int( len( maskRed ) * 0.1) )
 
         for i in range(int(len(maskRed) * 0.892), int(len(maskRed) * 0.9)):
             for k in range(0, int(len(maskRed[i]) / 2)):  # looks at the left pixels
@@ -74,7 +73,7 @@ try:
             elif direction < -250: #never under 
                   direction = -250
                     
-            print("\nWe are this close: ", direction)
+            print("\nCurrent Direction: ", direction)
             
             if 30 > direction > -30:
                 print("Dead on. Keep straight.")
@@ -92,12 +91,16 @@ try:
             lastCommand = 1450 + direction
             direction = 0
         else:
-            print("Lost track of them. Next frame.")
+            print("Lost track of cones. Next frame.")
         end = time.time()
         print("Total time spent on frame: ", end - start)
         #input()
 except KeyboardInterrupt:
+    if lastCommand < 1450: 
+       steering(1550)
+    elif lastCommand > 1550:
+       steering(1450)
+    else:
+       steering(1500)
     pi.stop()
-    steering(0)
-steering(0)
-pi.stop()
+
