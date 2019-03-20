@@ -96,8 +96,15 @@ try:
             elif direction <= -30:
                 print("Turn right")
          
-            steering(1450 + direction) 
+            if 1450+direction < lastCommand:
+                steering(lastCommand - 25) #small increments
+            else:
+                steering(lastCommand + 25)
+                
             lastCommand = 1450 + direction
+            
+            #steering(1450 + direction) 
+            
             direction = 0
             
         else:
