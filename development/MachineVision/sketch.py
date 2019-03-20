@@ -25,8 +25,8 @@ debugging = False
 
 if input("Debugging? ") == "yes":
     debugging = True
-    framerate = int(input("How many frames a second?"))
-    debuggingPeriod = int(input("For how long?"))
+    framerate = int(input("How many frames a second? "))
+    debuggingPeriod = int(input("For how long? "))
     secondCounter = 0 
     totalFrames = 0 
     
@@ -127,8 +127,8 @@ try:
             if secondCounter > debuggingPeriod:
                 print("We ran %d frames in %f seconds.", totalFrames, round(secondCounter,2))
                 print("Desired framerate: %d\nActual framerate: %f", framerate, round(totalFrames / secondCounter,2))
-                framerate = int(input("How many frames a second?"))
-                debuggingPeriod = int(input("For how long?"))
+                framerate = int(input("How many frames a second? "))
+                debuggingPeriod = int(input("For how long? "))
                 secondCounter = 0 
                 totalFrames = 0 
         
