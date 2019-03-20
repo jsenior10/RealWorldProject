@@ -3,7 +3,7 @@ import time
 import pigpio
 from findColour import findColour
 from picamera import PiCamera
-from picamera.array import PiRGBArray
+import picamera.array
 import numpy as np
 import cv2
 
@@ -39,8 +39,8 @@ try:
         #data = np.fromstring(stream.getvalue(), dtype=np.uint8)
         #image = cv2.imdecode(data, 1)
         
-        with picamera.array.PiRGBArray(camera) as stream:
-            camera.capture(stream, format='bgr')
+        with picamera.array.PiRGBArray(camera, size=(480, 240)) as stream:
+            camera.capture(stream, format='bgr', use_video_port=True)
             image = stream.array 
 
         print("Amount of time to take picture: ", time.time() - start)
@@ -79,7 +79,7 @@ try:
         if not foundRed:
             positionRed = -50 
         if not foundYellow:  #softer turn if cone not in field of view
-            poisitionYellow = 450
+            positionYellow = 450
 
         if foundRed or foundYellow: #functionally the same, more readable
             direction = 400 - positionYellow - positionRed
@@ -140,4 +140,3 @@ except KeyboardInterrupt:
     else:
        steering(1500)
     pi.stop()
-
