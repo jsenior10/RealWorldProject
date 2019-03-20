@@ -98,14 +98,12 @@ try:
          
             if 1450+direction < lastCommand:
                 steering(lastCommand - 25) #small increments
+                lastCommand -= 25 
             else:
                 steering(lastCommand + 25)
-                
-            lastCommand = 1450 + direction
+                lastCommand += 25 
             
             #steering(1450 + direction) 
-            
-            direction = 0
             
         else:
             print("Lost track of cones. Next frame.")
