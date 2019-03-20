@@ -25,8 +25,10 @@ debugging = False
 
 if input("Debugging? ") == "yes":
     debugging = True
-    amount = int(input("How many frames a second?"))
+    framerate = int(input("How many frames a second?"))
     debuggingPeriod = int(input("For how long?"))
+    secondCounter = 0 
+    totalFrames = 0 
     
 try:
     while True:
@@ -113,17 +115,22 @@ try:
         else:
             print("Lost track of cones. Next frame.")
             
-        timeSpent = start - time.time()
+        timeSpent = time.time() - start
         print("Total time spent on frame: ", timeSpent)
         
         if debugging:
-            secondCounter += 1/frames + timeSpent
-            if 1/frames - timeSpent > 0: #prevents negative time.sleep() 
-                time.sleep(1/frames - timeSpent)
+            totalFrames += 1 
+            secondCounter += timeSpent
+            if 1/framerate - timeSpent > 0: #prevents negative time.sleep() 
+                time.sleep(1/framerate - timeSpent) #remove timeSpent on processing
+                secondCounter += 1/framerate  #can be more accurate this way 
             if secondCounter > debuggingPeriod:
-                frames = int(input("How many frames a second?"))
+                print("We ran %d frames in %f seconds.", totalFrames, round(secondCounter,2))
+                print("Desired framerate: %d\nActual framerate: %f", framerate, round(totalFrames / secondCounter,2))
+                framerate = int(input("How many frames a second?"))
                 debuggingPeriod = int(input("For how long?"))
-        #input()
+                secondCounter = 0 
+                totalFrames = 0 
         
 except KeyboardInterrupt:
     if lastCommand < 1450: 
