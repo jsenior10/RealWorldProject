@@ -21,7 +21,13 @@ camera.resolution = (480, 240)
 camera.start_preview()
 
 lastCommand = 1500 #starts middle 
+debugging = False 
 
+if input("Debugging? ") == "yes":
+    debugging = True
+    amount = int(input("How many frames a second?"))
+    debuggingPeriod = int(input("For how long?"))
+    
 try:
     while True:
         start = time.time()
@@ -34,9 +40,8 @@ try:
         with picamera.array.PiRGBArray(camera) as stream:
             camera.capture(stream, format='bgr')
             image = stream.array 
-            
-        end = time.time()   
-        print("Amount of time to take picture ", end - start)
+
+        print("Amount of time to take picture: ", time.time() - start)
         
         maskRed, maskYellow = findColour(image, False)
 
@@ -108,8 +113,16 @@ try:
         else:
             print("Lost track of cones. Next frame.")
             
-        end = time.time()
-        print("Total time spent on frame: ", end - start)
+        timeSpent = start - time.time()
+        print("Total time spent on frame: ", timeSpent)
+        
+        if debugging:
+            secondCounter += 1/frames + timeSpent
+            if 1/frames - timeSpent > 0: #prevents negative time.sleep() 
+                time.sleep(1/frames - timeSpent)
+            if secondCounter > debuggingPeriod:
+                frames = int(input("How many frames a second?"))
+                debuggingPeriod = int(input("For how long?"))
         #input()
         
 except KeyboardInterrupt:
