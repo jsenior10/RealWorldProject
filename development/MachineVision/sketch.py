@@ -22,6 +22,7 @@ camera.start_preview()
 
 lastCommand = 1500 #starts middle 
 debugging = False 
+center = 1500
 
 if input("Debugging? ") == "yes":
     debugging = True
@@ -43,6 +44,7 @@ try:
             camera.capture(stream, format='bgr', use_video_port=True)
             image = stream.array 
 
+        #print("Amount of time to take picture: ", time.time() - start)
         print("Amount of time to take picture: ", time.time() - start)
         
         maskRed, maskYellow = findColour(image, False)
@@ -60,7 +62,7 @@ try:
                     if (not redCount):  # when count is 0
                         positionRed = k                     
                     redCount += 1       
-                    if redCount > 25:
+                    if redCount > 10:
                         print("Red at position: ", positionRed)
                         foundRed = True
                         break
@@ -71,12 +73,22 @@ try:
                     if (not yellowCount):  # when count == 0
                         positionYellow = k
                     yellowCount += 1
+
                     if yellowCount > 25:
+
                         print("Yellow at position: ", positionYellow)
                         foundYellow = True
                         break
         
         if not foundRed:
+
+            positionRed =  -125 
+        if not foundYellow:  #softer turn if cone not in field of view
+            positionYellow = 525
+
+        if foundRed or foundYellow: #functionally the same, more readabl
+            direction = 400 - positionYellow - positionRed
+
             positionRed = -50 
         if not foundYellow:  #softer turn if cone not in field of view
             positionYellow = 450
@@ -88,6 +100,7 @@ try:
                   direction = 250 #ensures we never go over our bounds
             elif direction < -250: #never under 
                   direction = -250
+
                     
             print("\nCurrent Direction: ", direction)
             
@@ -103,6 +116,16 @@ try:
             elif direction <= -30:
                 print("Turn right")
          
+
+            #if center+direction < lastCommand:
+            #    steering(lastCommand - 25) #small increments
+               # lastCommand -= 50 
+            #else:
+             #   steering(lastCommand + 25)
+              #  lastCommand += 50 
+            lastCommand = 1450+direction*1.3
+            steering(1450 + direction*1.3) 
+
             if 1450+direction < lastCommand:
                 steering(lastCommand - 25) #small increments
                 lastCommand -= 25 
@@ -111,12 +134,17 @@ try:
                 lastCommand += 25 
             
             #steering(1450 + direction) 
+
             
         else:
             print("Lost track of cones. Next frame.")
             
         timeSpent = time.time() - start
+
+        #print("Total time spent on frame: ", timeSpent)
+
         print("Total time spent on frame: ", timeSpent)
+
         
         if debugging:
             totalFrames += 1 
@@ -125,8 +153,10 @@ try:
                 time.sleep(1/framerate - timeSpent) #remove timeSpent on processing
                 secondCounter += 1/framerate  #can be more accurate this way 
             if secondCounter > debuggingPeriod:
-                print("We ran %d frames in %f seconds.", totalFrames, round(secondCounter,2))
-                print("Desired framerate: %d\nActual framerate: %f", framerate, round(totalFrames / secondCounter,2))
+
+                print("We ran {} frames in {} seconds.".format(totalFrames, round(secondCounter,2)))
+                print("Desired framerate: {}\nActual framerate: {}".format(framerate, round(totalFrames / secondCounter,2)))
+
                 framerate = int(input("How many frames a second? "))
                 debuggingPeriod = int(input("For how long? "))
                 secondCounter = 0 
