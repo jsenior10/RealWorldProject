@@ -70,7 +70,6 @@ def findColour(openCVobject, output=False) -> object:
         # yellowCirc = cv2.circle(image,(x1+w1//2, y1+h1//2), 25, (0,255,0), -1)
         # cv2.line(image, (x+w//2, y+h//2), (x1+w1//2, y1+h1//2), (255,0,0), 5)
         # cv2.imwrite('./Output/LargestArea.jpg', image)
-
     return maskRed, maskYellow
 """
 
@@ -79,7 +78,6 @@ def findColour(openCVobject, output=False) -> object:
     for contour in contours:
         area = cv2.contourArea(
             contour)  # returns the area of contour (i dont know what unit it returns it as (possibly pixels?))
-
         if area > 5000:  # draw the edges in green if the area is > 5000
             cnt_area = cv2.drawContours(image, contour, -1, (0, 255, 0), 3)
             cv2.imwrite('./Output/' + colour + 'cntArea.jpg', cnt_area)
